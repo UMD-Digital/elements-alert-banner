@@ -1,0 +1,16 @@
+{
+  "name": "elements-alert-banner",
+  "version": "0.0.1",
+  "description": "Alert Banner Element",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "license": "MIT",
+  "repository": "UMD-digital/elements-alert-banner",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo 'Hello World'",
+    "cleanup": "rm -rf ./dist/*"
+  }
+}
