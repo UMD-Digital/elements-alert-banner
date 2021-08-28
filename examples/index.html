@@ -8,29 +8,33 @@
     />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="icon" href="data:;base64,=" />
   </head>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    p:not(:last-of-type) {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+  </style>
+
   <body>
     <umd-alert-banner>
-      <div slot="">
-        <!-- alert content -->
-      </div>
-      <button>
-        <span>X</span>
-      </button>
-    </umd-alert-banner>
-    <header></header>
-    <main>
-      <h1>Alert Banner</h1>
+      <h1>Alert</h1>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
+        The University Of Maryland Is Following Normal Campus Operations:
+        February 19, 2021
       </p>
-    </main>
-    <footer></footer>
+    </umd-alert-banner>
+    <script src="/index.js" type="module" defer></script>
   </body>
 </html>

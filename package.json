@@ -10,7 +10,33 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo 'Hello World'",
-    "cleanup": "rm -rf ./dist/*"
+    "build": "./node_modules/.bin/webpack --env NODE_ENV=development",
+    "cleanup": "rm -rf ./dist/*",
+    "dist": "./node_modules/.bin/webpack --env NODE_ENV=production",
+    "start": "./node_modules/.bin/webpack -w --env NODE_ENV=development",
+    "test": "echo 'Hello World'"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "@universityofmaryland/utilityheader": "^0.0.4",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "browserslist": [
+    "Explorer 11"
+  ],
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "usage",
+          "corejs": 3
+        }
+      ]
+    ]
   }
 }
