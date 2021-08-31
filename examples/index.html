@@ -13,17 +13,17 @@
 
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
-    p:not(:last-of-type) {
-      margin-bottom: 20px;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
     }
 
-    h1 {
-      margin-bottom: 20px;
+    p {
+      margin-top: 20px;
     }
   </style>
 
@@ -31,10 +31,81 @@
     <umd-alert-banner>
       <h1>Alert</h1>
       <p>
-        The University Of Maryland Is Following Normal Campus Operations:
-        February 19, 2021
+        This Alert has no type applied and is at the mercy of the lightDOM
+        styles
       </p>
     </umd-alert-banner>
+
+    <umd-alert-banner data-alert-type="primary">
+      <h1>Alert 2</h1>
+      <p>
+        A second Alert with a <em>&ldquo;primary&rdquo;</em> Alert type. the
+        styles are more strickly controlled with
+        <code>data-alert-type</code> applied to the element.
+      </p>
+    </umd-alert-banner>
+
+    <umd-alert-banner data-alert-type="warning">
+      <h1>Alert 3</h1>
+      <p>A third alert. with the alert type <em>&ldquo;warning&rdquo;</em></p>
+    </umd-alert-banner>
+
+    <umd-alert-banner data-alert-type="danger">
+      <h1>Alert 4</h1>
+      <p>
+        A fourth alert with a lot of text. Leverage agile frameworks to provide
+        a robust synopsis for high level overviews. This alert has the
+        <em>&ldquo;danger&rdquo;</em> alert type applied.
+      </p>
+      <p>
+        <strong>And some bold text inside</strong> Iterative approaches to
+        corporate strategy foster collaborative thinking to further the overall
+        value proposition. Organically grow the holistic world view of
+        disruptive innovation via workplace diversity and empowerment.
+      </p>
+    </umd-alert-banner>
+
+    <section style="padding: 20px">
+      <layout-lock
+        style="
+          border: 1px solid #e6e6e6;
+          border-radius: 5px;
+          display: block;
+          margin: 0 auto;
+          padding: 20px;
+          overflow: hidden;
+          max-width: 900px;
+        "
+      >
+        <h1>lightDOM styles</h1>
+        <p>
+          <em>
+            The following styles are applied to the lightDOM for this example
+            page.
+          </em>
+        </p>
+
+        <hr style="margin: 10px 0" />
+
+        <pre style="color: #454545; overflow: scroll">
+          <code>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+p {
+  margin-top: 20px;
+}
+          </code>
+        </pre>
+      </layout-lock>
+    </section>
     <script src="/index.js" type="module" defer></script>
   </body>
 </html>
