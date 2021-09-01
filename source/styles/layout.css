@@ -6,11 +6,40 @@ layout-lock {
   display: flex;
   justify-content: space-between;
   margin: 0 auto !important;
-  padding: 20px !important;
-  max-width: 900px;
 }
 
 slot[data-alert] {
   display: block;
   margin-right: 20px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+:host([type='primary']) {
+  background-color: var(--grayLight) !important;
+
+  & ::slotted(*) {
+    color: var(--grayDark) !important;
+    fill: var(--grayDark) !important;
+  }
+}
+
+:host([type='warning']) {
+  background-color: var(--gold) !important;
+
+  & ::slotted(*) {
+    color: var(--black) !important;
+    fill: var(--black) !important;
+  }
+}
+
+:host([type='danger']) {
+  background-color: var(--red) !important;
+
+  & ::slotted(*) {
+    color: var(--white) !important;
+    fill: var(--white) !important;
+  }
 }

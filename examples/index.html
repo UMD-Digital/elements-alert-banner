@@ -31,36 +31,59 @@
     <umd-alert-banner>
       <h1>Alert</h1>
       <p>
-        This Alert has no type applied and is at the mercy of the lightDOM
-        styles
+        This alert has no attrbutes applied to it so styling is handled almost
+        completely by the lightDOM.
       </p>
     </umd-alert-banner>
 
-    <umd-alert-banner data-alert-type="primary">
+    <umd-alert-banner
+      type="primary"
+      padding="20px"
+      size="1280px"
+      button="Dismiss Alert 2"
+    >
       <h1>Alert 2</h1>
       <p>
-        A second Alert with a <em>&ldquo;primary&rdquo;</em> Alert type. the
-        styles are more strickly controlled with
-        <code>data-alert-type</code> applied to the element.
+        A second Alert with a <em>&ldquo;primary&rdquo;</em> alert type. The
+        styles are more strickly controlled with <code>type</code> applied to
+        the element. This alert also has <code>padding="20px"</code>, and
+        <code>size="1280px"</code> options applied.
       </p>
     </umd-alert-banner>
 
-    <umd-alert-banner data-alert-type="warning">
+    <umd-alert-banner
+      type="warning"
+      padding="20px"
+      size="1024px"
+      button="Close Alert 3"
+    >
       <h1>Alert 3</h1>
-      <p>A third alert. with the alert type <em>&ldquo;warning&rdquo;</em></p>
+      <p>
+        A third alert. with the alert type <em>&ldquo;warning&rdquo;</em> This
+        alert also has <code>padding="20px"</code>, and
+        <code>size="1024px"</code> options applied.
+      </p>
     </umd-alert-banner>
 
-    <umd-alert-banner data-alert-type="danger">
+    <umd-alert-banner
+      type="danger"
+      padding="20px"
+      size="768px"
+      button="The persist option overrides the button option"
+      persist
+    >
       <h1>Alert 4</h1>
       <p>
-        A fourth alert with a lot of text. Leverage agile frameworks to provide
-        a robust synopsis for high level overviews. This alert has the
-        <em>&ldquo;danger&rdquo;</em> alert type applied.
+        A fourth alert with a lot of text. This alert has the
+        <em>&ldquo;danger&rdquo;</em> alert type applied. This alert also has
+        <code>padding="20px"</code>, and <code>size="768px"</code> options
+        applied.
       </p>
       <p>
-        <strong>And some bold text inside</strong> Iterative approaches to
-        corporate strategy foster collaborative thinking to further the overall
-        value proposition. Organically grow the holistic world view of
+        <strong>And some bold text inside</strong> Leverage agile frameworks to
+        provide a robust synopsis for high level overviews. Iterative approaches
+        to corporate strategy foster collaborative thinking to further the
+        overall value proposition. Organically grow the holistic world view of
         disruptive innovation via workplace diversity and empowerment.
       </p>
     </umd-alert-banner>
@@ -74,7 +97,7 @@
           margin: 0 auto;
           padding: 20px;
           overflow: hidden;
-          max-width: 900px;
+          max-width: 768px;
         "
       >
         <h1>lightDOM styles</h1>
@@ -85,7 +108,7 @@
           </em>
         </p>
 
-        <hr style="margin: 10px 0" />
+        <hr aria-hidden="true" style="margin: 10px 0" />
 
         <pre style="color: #454545; overflow: scroll">
           <code>
