@@ -4,10 +4,10 @@ button[data-alert='close-button'] {
   border-radius: 3px;
   cursor: pointer;
   flex: none;
-  height: 24px;
-  margin-top: -4px;
-  padding: 4px;
-  width: 24px;
+  height: 30px;
+  margin-top: -5px;
+  padding: 5px;
+  width: 30px;
 
   & svg {
     height: 100%;
@@ -20,8 +20,6 @@ button[data-alert='close-button'] {
     transition: color 0.3s, fill 0.3s, border-color 0.3s;
   }
 }
-
-/* PRIMARY ALERT STYLES */
 
 :host([data-alert-type='primary']) {
   background-color: var(--grayLight) !important;
@@ -82,8 +80,6 @@ button[data-alert='close-button'] {
     fill: var(--black) !important;
   }
 }
-
-/* DANGER ALERT STYLES */
 
 :host([data-alert-type='danger']) {
   background-color: var(--red) !important;

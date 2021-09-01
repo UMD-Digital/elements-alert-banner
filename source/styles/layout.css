@@ -10,6 +10,7 @@ layout-lock {
   max-width: 900px;
 }
 
-div[data-alert] {
+slot[data-alert] {
+  display: block;
   margin-right: 20px;
 }
