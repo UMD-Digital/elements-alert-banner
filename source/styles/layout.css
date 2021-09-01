@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+layout-lock {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto !important;
+  padding: 20px !important;
+  max-width: 900px;
+}
+
+div[data-alert] {
+  margin-right: 20px;
+}
