@@ -1,17 +1,40 @@
 import css from './styles/main.css';
 
-const composeStyles = (layoutLockOptions) => {
-  const size = layoutLockOptions.size;
-  const padding = layoutLockOptions.padding;
-  const customeLayoutLock = `
+const getAlertAttributes = (element) => {
+  return {
+    id: element.getAttribute('id') ?? 'alert-banner',
+    buttonText: element.getAttribute('button'),
+    isDismissable:
+      element.getAttribute('dismissable') == 'false' ? false : true,
+    padding: element.getAttribute('padding'),
+    size: element.getAttribute('size'),
+    type: element.getAttribute('type'),
+  };
+};
+
+const getAlertContent = (element) => {
+  const alertAttributes = getAlertAttributes(element);
+
+  return {
+    id: alertAttributes.id,
+    type: alertAttributes.type,
+    buttonText: alertAttributes.buttonText,
+    isDismissable: alertAttributes.isDismissable,
+    type: alertAttributes.type,
+    content: element.innerHTML,
+  };
+};
+
+const composeStyles = (additionalStyles) => {
+  const customLayoutLock = `
     layout-lock {
-      max-width: ${size ?? null};
-      padding: ${padding ?? 0};
+      max-width: ${additionalStyles.size ?? null};
+      padding: ${additionalStyles.padding ?? 0};
     }
   `;
 
   const styles = document.createElement('style');
-  styles.innerHTML = css + customeLayoutLock;
+  styles.innerHTML = css + customLayoutLock;
 
   return styles;
 };
@@ -29,39 +52,72 @@ const composeButton = (buttonText) => {
   return button;
 };
 
-const composeContent = () => {
-  const alertContent = document.createElement('slot');
-  alertContent.setAttribute('data-alert', 'content');
+const composeLayout = (additionalComponents) => {
+  const button = additionalComponents.button;
+  const layout = document.createElement('layout-lock');
+  const slot = document.createElement('slot');
 
-  return alertContent;
+  slot.setAttribute('data-alert', 'content');
+  layout.append(slot, button);
+
+  return layout;
 };
 
-const composeTemplate = (element) => {
-  const buttonText = element.getAttribute('button');
-  const isPersistent = element.hasAttribute('persist');
-  const layoutLockOptions = {
-    size: element.getAttribute('size'),
-    padding: element.getAttribute('padding'),
-  };
+const composeTemplate = (alertAttributes) => {
   const template = document.createElement('template');
-  const layout = document.createElement('layout-lock');
-  const styles = composeStyles(layoutLockOptions);
-  const button = isPersistent ? '' : composeButton(buttonText);
-  const content = composeContent();
 
-  layout.append(content, button);
+  const button = alertAttributes.isDismissable
+    ? composeButton(alertAttributes.buttonText)
+    : '';
+  const layout = composeLayout({ button });
+
+  const styles = composeStyles({
+    padding: alertAttributes.padding,
+    size: alertAttributes.size,
+  });
+
   template.innerHTML = layout.outerHTML + styles.outerHTML;
 
   return template.content;
 };
 
-class AlertBanner extends HTMLElement {
+export default class AlertBanner extends HTMLElement {
   constructor() {
     super();
 
-    const templateContent = composeTemplate(this);
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.append(templateContent.cloneNode(true));
+    const alertAttributes = getAlertAttributes(this);
+    const alertContent = getAlertContent(this);
+    const alertContentString = JSON.stringify(alertContent);
+    const isStoredLocally = window.localStorage.getItem(alertAttributes.id);
+
+    if (isStoredLocally && alertContentString === isStoredLocally) {
+      this.setAttribute('show', false);
+      this.remove();
+    }
+
+    if (!isStoredLocally || alertContentString != isStoredLocally) {
+      const shadowRoot = this.attachShadow({ mode: 'open' });
+      const template = composeTemplate(alertAttributes);
+
+      shadowRoot.append(template.cloneNode(true));
+      this.setAttribute('show', true);
+    }
+  }
+
+  connectedCallback() {
+    const button = this.shadowRoot?.querySelector('button');
+
+    button && button.addEventListener('click', () => this.handleButtonClick());
+  }
+
+  handleButtonClick() {
+    if (this.getAttribute('show') == 'true') {
+      const alertContent = getAlertContent(this);
+      const alertContentString = JSON.stringify(alertContent);
+
+      window.localStorage.setItem(alertContent.id, alertContentString);
+      this.remove();
+    }
   }
 }
 

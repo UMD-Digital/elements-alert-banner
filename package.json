@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "./node_modules/.bin/webpack --env NODE_ENV=development",
-    "cleanup": "rm -rf ./dist/*",
+    "cleanup": "rm -rf ./dist/* && rm -rf ./examples/index.js",
     "dist": "./node_modules/.bin/webpack --env NODE_ENV=production",
     "start": "./node_modules/.bin/webpack -w --env NODE_ENV=development",
     "test": "echo 'Hello World'"
