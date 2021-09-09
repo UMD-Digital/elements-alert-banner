@@ -2,7 +2,9 @@ import css from './styles/main.css';
 
 const getAlertAttributes = (element) => {
   return {
-    id: element.getAttribute('id') ?? 'alert-banner',
+    id: element.getAttribute('id')
+      ? `alert-banner-${element.getAttribute('id')}`
+      : 'alert-banner',
     buttonText: element.getAttribute('button'),
     isDismissable:
       element.getAttribute('dismissable') == 'false' ? false : true,
