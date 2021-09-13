@@ -51,6 +51,23 @@ import '@universityofmaryland/alertbanner';
 
 By default the element displays a "Close" `X` button that lets a user dismiss/hide the alert. Using the [localStorage WebAPI](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) that alert remains dismissed until the user clears their local cache, or the contents of the alert element differ compared to the reference saved to `window.localStorage`. _**Setting a unique `id` attribute to each alert displayed allows this functionality to work individually with each alert element on a page.**_
 
+## Development
+
+```bash
+# Build once or build and watch for changes
+yarn build
+yarn start
+
+# Remove index.js from /dist, and /examples directories
+yarn cleanup
+
+# Build index.js for distribution/production
+yarn dist
+
+# Run jest suite of testing on the custom element
+yarn jest
+```
+
 ## License
 
 Distributed under the MIT license. See LICENSE for details.
