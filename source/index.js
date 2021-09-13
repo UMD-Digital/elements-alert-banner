@@ -30,8 +30,8 @@ const getAlertContent = (element) => {
 const composeStyles = (additionalStyles) => {
   const customLayoutLock = `
     layout-lock {
-      max-width: ${additionalStyles.size ?? null};
       padding: ${additionalStyles.padding ?? 0};
+      max-width: ${additionalStyles.size ?? 'initial'};
     }
   `;
 
