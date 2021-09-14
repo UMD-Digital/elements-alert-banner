@@ -16,13 +16,6 @@ module.exports = (env) => {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
-
-      {
-        test: /\.css$/,
-        exclude: /node_modules/,
-        type: 'asset/source',
-        use: ['postcss-loader'],
-      },
     ],
   };
 
