@@ -23,71 +23,67 @@
     }
 
     p {
+      line-height: 1.3em;
       margin-top: 20px;
     }
   </style>
 
   <body>
-    <umd-alert-banner>
-      <h1>Alert</h1>
+    <umd-alert-banner storage-key="alert-1">
+      <h1>Alert 1</h1>
       <p>
-        This alert has no attrbutes applied to it so styling is handled almost
-        completely by the lightDOM.
+        This alert has no attrbutes applied to it, except for a unique
+        <code>storage-key</code>, Styling is handled almost completely by the
+        lightDOM.
       </p>
     </umd-alert-banner>
 
     <umd-alert-banner
-      id="alert-2"
-      type="primary"
-      padding="20px"
-      size="1280px"
       button="Dismiss Alert 2"
+      padding="20px"
+      storage-key="alert-2"
+      type="primary"
+      max-width="1280px"
     >
       <h1>Alert 2</h1>
       <p>
-        A second Alert with a <em>&ldquo;primary&rdquo;</em> alert type. The
-        styles are more strickly controlled with <code>type</code> applied to
-        the element. This alert also has <code>padding="20px"</code>, and
-        <code>size="1280px"</code> options applied.
+        A second alert with a <em>&ldquo;primary&rdquo;</em> alert type. The
+        styles are more strictly controlled when a <code>type</code> is applied
+        to the element. This alert also has <code>padding="20px"</code>, and
+        <code>max-width="1280px"</code> attributes.
       </p>
     </umd-alert-banner>
 
     <umd-alert-banner
-      id="alert-3"
-      type="warning"
-      padding="20px"
-      size="1024px"
       button="Close Alert 3"
+      padding="20px"
+      storage-key="alert-3"
+      type="warning"
+      max-width="1024px"
     >
       <h1>Alert 3</h1>
       <p>
-        A third alert. with the alert type <em>&ldquo;warning&rdquo;</em> This
+        A third alert with a <em>&ldquo;warning&rdquo;</em> alert type. This
         alert also has <code>padding="20px"</code>, and
-        <code>size="1024px"</code> options applied.
+        <code>max-width="1024px"</code> attributes.
       </p>
     </umd-alert-banner>
 
     <umd-alert-banner
-      id="alert-4"
-      type="danger"
-      padding="20px"
-      size="768px"
-      button="The persist option overrides the button option"
+      button="The dismissable attribute overrides the button attribute"
       dismissable="false"
+      padding="20px"
+      storage-key="alert-4"
+      type="danger"
+      max-width="768px"
     >
       <h1>Alert 4</h1>
       <p>
-        A fourth alert with a lot of text. This alert has the
-        <em>&ldquo;danger&rdquo;</em> alert type applied. This alert also has
-        <code>padding="20px"</code>, and <code>size="768px"</code> options
-        applied.
-      </p>
-      <p>
-        <strong>And some bold text inside</strong> Leverage agile frameworks to
-        provide a robust synopsis for high level overviews. Iterative approaches
-        to corporate strategy foster collaborative thinking to further the
-        overall value proposition. Organically grow the holistic world view of
-        disruptive innovation via workplace diversity and empowerment.
+        A fourth alert with a <em>&ldquo;danger&rdquo;</em> alert type. This
+        alert has <code>padding="20px"</code>, and
+        <code>max-width="768px"</code> attributes and cannot be
+        dismissed/removed because the "Close" [X] button is not rendered when
+        the <code>dismissable="false"</code> attribute is applied.
       </p>
     </umd-alert-banner>
 
@@ -126,6 +122,7 @@ body {
 }
 
 p {
+  line-height: 1.3em;
   margin-top: 20px;
 }
           </code>

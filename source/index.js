@@ -160,22 +160,26 @@ export default class AlertBanner extends HTMLElement {
   constructor() {
     super();
 
-    const alertAttributes = this.getAlertAttributes(this);
-    const alertContent = this.getAlertContent(this);
-    const alertContentString = JSON.stringify(alertContent);
-    const isStoredLocally = window.localStorage.getItem(alertAttributes.id);
+    const uniqueStorageKey = this.checkStorageKeyIsUnique();
 
-    if (isStoredLocally && alertContentString === isStoredLocally) {
-      this.setAttribute('show', false);
-      this.remove();
-    }
+    if (uniqueStorageKey) {
+      const alertContent = this.getAlertContent(this);
+      const alertContentString = JSON.stringify(alertContent);
+      const isStoredLocally = window.localStorage.getItem(uniqueStorageKey);
 
-    if (!isStoredLocally || alertContentString != isStoredLocally) {
-      const shadowRoot = this.attachShadow({ mode: 'open' });
-      const template = this.composeTemplate(alertAttributes);
+      if (isStoredLocally && alertContentString === isStoredLocally) {
+        this.setAttribute('show', false);
+        this.remove();
+      }
 
-      shadowRoot.append(template.cloneNode(true));
-      this.setAttribute('show', true);
+      if (!isStoredLocally || alertContentString != isStoredLocally) {
+        const alertAttributes = this.getAlertAttributes(this);
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        const template = this.composeTemplate(alertAttributes);
+
+        shadowRoot.append(template.cloneNode(true));
+        this.setAttribute('show', true);
+      }
     }
   }
 
@@ -190,21 +194,67 @@ export default class AlertBanner extends HTMLElement {
       const alertContent = this.getAlertContent(this);
       const alertContentString = JSON.stringify(alertContent);
 
-      window.localStorage.setItem(alertContent.id, alertContentString);
+      window.localStorage.setItem(alertContent.storageKey, alertContentString);
       this.remove();
+    }
+  }
+
+  checkForStorageKey() {
+    const hasStorageKey = this.getAttribute('storage-key');
+
+    if (!hasStorageKey) {
+      this.remove();
+      console.error(
+        'Alert Banner elements must have a "storage-key" attribute',
+        this,
+      );
+    }
+
+    if (hasStorageKey) {
+      return hasStorageKey;
+    }
+  }
+
+  checkStorageKeyIsUnique() {
+    const storageKey = this.checkForStorageKey();
+
+    if (!storageKey) {
+      return false;
+    }
+
+    const allAlertBanners = document.querySelectorAll(
+      'umd-alert-banner[storage-key]',
+    );
+    const uniqueKeyList = {};
+
+    allAlertBanners.forEach((alert) => {
+      const thisKey = alert.getAttribute('storage-key');
+      if (uniqueKeyList.hasOwnProperty(thisKey)) {
+        uniqueKeyList[thisKey] = uniqueKeyList[thisKey] + 1;
+      }
+      if (!uniqueKeyList.hasOwnProperty(thisKey)) {
+        uniqueKeyList[thisKey] = 1;
+      }
+    });
+
+    if (uniqueKeyList[storageKey] > 1) {
+      this.remove();
+      console.error('Alert Banner elements "storage-key" must be unique', this);
+    }
+
+    if (uniqueKeyList[storageKey] === 1) {
+      return storageKey;
     }
   }
 
   getAlertAttributes(element) {
     return {
-      id: element.getAttribute('id')
-        ? `alert-banner-${element.getAttribute('id')}`
-        : 'alert-banner',
+      storageKey: element.getAttribute('storage-key'),
       buttonText: element.getAttribute('button'),
       isDismissable:
         element.getAttribute('dismissable') == 'false' ? false : true,
       padding: element.getAttribute('padding'),
-      size: element.getAttribute('size'),
+      maxWidth: element.getAttribute('max-width'),
       type: element.getAttribute('type'),
     };
   }
@@ -213,7 +263,7 @@ export default class AlertBanner extends HTMLElement {
     const alertAttributes = this.getAlertAttributes(element);
 
     return {
-      id: alertAttributes.id,
+      storageKey: alertAttributes.storageKey,
       type: alertAttributes.type,
       buttonText: alertAttributes.buttonText,
       isDismissable: alertAttributes.isDismissable,
@@ -229,7 +279,7 @@ export default class AlertBanner extends HTMLElement {
     const customLayoutLock = `
     layout-lock {
       padding: ${additionalStyles.padding ?? 0};
-      max-width: ${additionalStyles.size ?? 'initial'};
+      max-width: ${additionalStyles.maxWidth ?? 'initial'};
     }
   `;
 
@@ -261,7 +311,7 @@ export default class AlertBanner extends HTMLElement {
 
     const styles = this.composeStyles({
       padding: alertAttributes.padding,
-      size: alertAttributes.size,
+      maxWidth: alertAttributes.maxWidth,
     });
 
     template.innerHTML = layout.outerHTML + styles.outerHTML;
