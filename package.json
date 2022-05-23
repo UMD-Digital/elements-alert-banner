@@ -1,5 +1,5 @@
 {
-  "name": "elements-alert-banner",
+  "name": "@universityofmaryland/alertBanner",
   "version": "0.0.1",
   "description": "Alert Banner Element",
   "main": "dist/index.js",
@@ -10,41 +10,20 @@
     "dist"
   ],
   "scripts": {
-    "build": "./node_modules/.bin/webpack --env NODE_ENV=development",
-    "cleanup": "rm -rf ./dist/* && rm -rf ./examples/index.js",
-    "dist": "./node_modules/.bin/webpack --env NODE_ENV=production",
-    "jest": "./node_modules/.bin/jest",
-    "start": "./node_modules/.bin/webpack -w --env NODE_ENV=development",
-    "test": "echo 'Hello World'"
+    "cleanup": "rm -rf dist/*",
+    "build:prod": "./node_modules/.bin/tsc -outDir dist",
+    "build:dev": "./node_modules/.bin/tsc -outDir examples",
+    "lint": "./node_modules/.bin/eslint src/*.ts test/*.js",
+    "start": "./node_modules/.bin/tsc -w -outDir examples"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/node": "^7.14.9",
-    "@babel/preset-env": "^7.15.0",
     "@universityofmaryland/utilityheader": "^0.0.4",
-    "babel-jest": "^27.1.1",
-    "babel-loader": "^8.2.2",
-    "jest": "^27.1.1",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "eslint": "^8.16.0",
+    "eslint-plugin-github": "^4.3.6",
+    "typescript": "^4.6.4"
   },
-  "browserslist": [
-    "Explorer 11"
+  "eslintIgnore": [
+    "dist/"
   ],
-  "babel": {
-    "sourceMaps": true,
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "useBuiltIns": "usage",
-          "corejs": 3
-        }
-      ]
-    ]
-  },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "jsdom"
-  }
+  "dependencies": {}
 }

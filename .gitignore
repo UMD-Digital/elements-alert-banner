@@ -1,12 +1,3 @@
-# node
-
 /node_modules
-
-# dev
-
 /test
-
-
-# macOS
-
 .DS_Store
