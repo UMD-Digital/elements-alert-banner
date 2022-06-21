@@ -71,7 +71,7 @@ const CSS = {
       opacity: 0;
     }
 
-    layout-lock {
+    [data-layout] {
       display: flex;
       justify-content: space-between;
       margin: 0 auto !important;
@@ -302,7 +302,7 @@ class AlertBanner extends HTMLElement {
     const customPadding = this.getAttribute('padding');
     const customMaxWidth = this.getAttribute('max-width');
     const customLayoutLock = `
-    :host layout-lock {
+    :host [data-layout] {
       padding: ${customPadding ?? 0};
       max-width: ${customMaxWidth ?? 'initial'};
     }
@@ -315,11 +315,12 @@ class AlertBanner extends HTMLElement {
 
   composeTemplate() {
     const template = document.createElement('template');
-    const layout = document.createElement('layout-lock') as HTMLElement;
+    const layout = document.createElement('div') as HTMLElement;
     const slot = document.createElement('slot') as HTMLElement;
     const dismissable = this.getAttribute('dismissable') !== 'false';
     const styles = this.composeStyles();
 
+    layout.setAttribute('data-layout', 'true');
     layout.appendChild(slot);
 
     if (dismissable) {
