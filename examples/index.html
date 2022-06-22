@@ -119,7 +119,8 @@
     </umd-alert-banner>
 
     <umd-alert-banner
-      button="Close Alert 4"
+      button="The dismissable attribute overrides the button attribute"
+      dismissable="false"
       padding="20px"
       storage-key="alert-4"
       type="blue"
@@ -130,13 +131,14 @@
         A fourth alert with a custom alert type, went with blue. This alert also
         has
         <code>padding="20px"</code>, and
-        <code>max-width="1024px"</code> attributes.
+        <code>max-width="1024px"</code> attributes and cannot be
+        dismissed/removed because the "Close" [X] button is not rendered when
+        the <code>dismissable="false"</code> attribute is applied.
       </p>
     </umd-alert-banner>
 
     <umd-alert-banner
-      button="The dismissable attribute overrides the button attribute"
-      dismissable="false"
+      button="Close Alert 5"
       padding="20px"
       storage-key="alert-5"
       type="danger"
@@ -146,9 +148,7 @@
       <p>
         A fifth alert with a <em>&ldquo;danger&rdquo;</em> alert type. This
         alert has <code>padding="20px"</code>, and
-        <code>max-width="768px"</code> attributes and cannot be
-        dismissed/removed because the "Close" [X] button is not rendered when
-        the <code>dismissable="false"</code> attribute is applied.
+        <code>max-width="768px"</code> attributes.
       </p>
     </umd-alert-banner>
 

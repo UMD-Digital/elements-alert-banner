@@ -34,17 +34,12 @@ const COLOR = {
   grayDark: '#454545',
 };
 
-const CSS = {
-  base: `
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
+const STYLES = `
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
       padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
     }
 
     :host(*) {
@@ -57,14 +52,12 @@ const CSS = {
     :host(*) ::slotted(*),
     :host(*) button[name="close"] {
       opacity: 1;
-      transition: opacity ${ANIMATION_TIME.css};
     }
 
     :host([show="false"]) {
       display: none;
       max-height: 0;
     }
-
 
     :host([show="false"]) ::slotted(*),
     :host([show="false"]) button[name="close"] {
@@ -75,6 +68,7 @@ const CSS = {
       display: flex;
       justify-content: space-between;
       margin: 0 auto !important;
+      max-width: initial;
     }
 
     slot {
@@ -95,7 +89,8 @@ const CSS = {
       height: 30px;
       margin-top: -5px;
       padding: 5px;
-      transition: box-shadow 0.3s, color 0.3s;
+      transition: ;
+      transition: box-shadow 0.3s, color 0.3s, opacity ${ANIMATION_TIME.css};
       width: 30px;
     }
 
@@ -104,8 +99,8 @@ const CSS = {
       height: 100%;
       width: 100%;
     }
-  `,
-};
+  </style>
+`;
 
 const ALERT_TYPE_CSS = {
   primary: `
@@ -119,14 +114,14 @@ const ALERT_TYPE_CSS = {
     }
 
     :host([type='primary']) button[name='close'] {
-      box-shadow: inset 0 0 0 0 ${COLOR.grayDark};
+      box-shadow: 0 0 0 1px transparent;
       color: ${COLOR.grayDark} !important;
       fill: ${COLOR.grayDark} !important;
     }
 
    :host([type='primary']) button[name='close']:hover,
    :host([type='primary']) button[name='close']:focus {
-      box-shadow: inset 0 0 0 1px ${COLOR.grayDark};
+      box-shadow: 0 0 0 1px ${COLOR.grayDark};
     }
   `,
   warning: `
@@ -140,14 +135,14 @@ const ALERT_TYPE_CSS = {
     }
 
     :host([type='warning']) button[name='close'] {
-      box-shadow: inset 0 0 0 0 ${COLOR.black};
+      box-shadow: 0 0 0 1px transparent;
       color: ${COLOR.black} !important;
       fill: ${COLOR.black} !important;
     }
 
    :host([type='warning']) button[name='close']:hover,
    :host([type='warning']) button[name='close']:focus {
-      box-shadow: inset 0 0 0 1px ${COLOR.black};
+      box-shadow: 0 0 0 1px ${COLOR.black};
     }
   `,
   danger: `
@@ -161,19 +156,23 @@ const ALERT_TYPE_CSS = {
     }
 
     :host([type='danger']) button[name='close'] {
-      box-shadow: inset 0 0 0 0 ${COLOR.white};
+      box-shadow: 0 0 0 1px transparent;
       color: ${COLOR.white} !important;
       fill: ${COLOR.white} !important;
     }
 
    :host([type='danger']) button[name='close']:hover,
    :host([type='danger']) button[name='close']:focus {
-      box-shadow: inset 0 0 0 1px ${COLOR.white};
+      box-shadow: 0 0 0 1px ${COLOR.white};
     }
   `,
 };
 
 class AlertBanner extends HTMLElement {
+  static get observedAttributes() {
+    return ['button', 'dismissable', 'padding', 'type', 'max-width'];
+  }
+
   constructor() {
     super();
 
@@ -187,6 +186,28 @@ class AlertBanner extends HTMLElement {
     const hideAlert = this.handleButtonClick.bind(this);
 
     button && button.addEventListener('click', hideAlert);
+  }
+
+  attributeChangedCallback<T extends string>(
+    name: string,
+    oldValue: T,
+    newValue: T,
+  ) {
+    const isStyles = name == 'type' || name == 'padding' || name == 'max-width';
+    const isButton = name == 'button';
+    const persistance = name == 'dismissable';
+
+    if (isButton) {
+      this.setButtonLabel(newValue);
+    }
+
+    if (persistance) {
+      this.setAlertPersistance(newValue);
+    }
+
+    if (isStyles) {
+      this.setStyles(name, newValue);
+    }
   }
 
   displayAlertLogic(storageKey: string) {
@@ -296,61 +317,85 @@ class AlertBanner extends HTMLElement {
     }
   }
 
-  composeButton() {
-    const button = document.createElement('button') as HTMLElement;
-    const accessibleText = document.createElement('span') as HTMLElement;
-    const buttonText = this.getAttribute('button') as string;
-
-    button.setAttribute('name', 'close');
-    accessibleText.setAttribute('class', 'sr-only');
-    accessibleText.textContent = buttonText ?? 'Close';
-    button.innerHTML = CLOSE_ICON + accessibleText.outerHTML;
-
-    return button;
-  }
-
-  composeStyles() {
-    const stylesElement = document.createElement('style') as HTMLElement;
-
-    const alertType = this.getAttribute('type') as keyof typeof ALERT_TYPE_CSS;
-    const isAlertType = alertType && alertType in ALERT_TYPE_CSS;
-    const alertTypeStyles = isAlertType ? ALERT_TYPE_CSS[alertType] : '';
-
-    const customPadding = this.getAttribute('padding');
-    const customMaxWidth = this.getAttribute('max-width');
-    const customLayoutLock = `
-    :host [data-layout] {
-      padding: ${customPadding ?? 0};
-      max-width: ${customMaxWidth ?? 'initial'};
-    }
-  `;
-
-    stylesElement.innerHTML = CSS.base + alertTypeStyles + customLayoutLock;
-
-    return stylesElement;
-  }
-
   composeTemplate() {
     const template = document.createElement('template');
     const layout = document.createElement('div') as HTMLElement;
     const slot = document.createElement('slot') as HTMLElement;
-    const dismissable = this.getAttribute('dismissable') !== 'false';
-    const styles = this.composeStyles();
+    const button = document.createElement('button') as HTMLElement;
 
+    button.setAttribute('name', 'close');
+    button.setAttribute('aria-label', 'close');
+    button.innerHTML = CLOSE_ICON;
     layout.setAttribute('data-layout', 'true');
-    layout.appendChild(slot);
-
-    if (dismissable) {
-      const button = this.composeButton();
-
-      layout.appendChild(button);
-    }
-
-    slot.setAttribute('data-alert', 'content');
-
-    template.innerHTML = layout.outerHTML + styles.outerHTML;
+    layout.append(slot, button);
+    template.innerHTML = layout.outerHTML + STYLES;
 
     return template.content;
+  }
+
+  setButtonLabel(buttonText: string) {
+    // prettier-ignore
+    const button = this.shadowRoot?.querySelector('[name="close]') as HTMLElement;
+
+    button && button.setAttribute('aria-label', buttonText ?? 'close');
+  }
+
+  setAlertPersistance(dismissable: string) {
+    // prettier-ignore
+    const button = this.shadowRoot?.querySelector('[name="close"]') as HTMLElement;
+    const isPersistant = dismissable == 'false';
+
+    if (isPersistant) {
+      button && button.remove();
+    }
+  }
+
+  setStyles(name: string, newValue: string) {
+    // prettier-ignore
+    const layout = this.shadowRoot?.querySelector('[data-layout]') as HTMLElement;
+
+    const setAlertType = (typeValue: string) => {
+      const alertType = typeValue as keyof typeof ALERT_TYPE_CSS;
+      const isAlertType = alertType && alertType in ALERT_TYPE_CSS;
+
+      const typeStyles = this.shadowRoot?.querySelector('#type-styles')
+        ? (this.shadowRoot?.querySelector('#type-styles') as HTMLElement)
+        : (document.createElement('style') as HTMLElement);
+
+      typeStyles.setAttribute('id', 'type-styles');
+
+      if (isAlertType) {
+        typeStyles.innerHTML += ALERT_TYPE_CSS[alertType];
+
+        if (!this.shadowRoot?.contains(typeStyles)) {
+          this.shadowRoot?.appendChild(typeStyles);
+        }
+
+        return;
+      }
+
+      typeStyles.remove();
+    };
+
+    const setPadding = (customPadding: string) => {
+      layout.style.padding = `${customPadding ?? 0}`;
+    };
+
+    const setMaxWidth = (customMaxWidth: string) => {
+      layout.style.maxWidth = `${customMaxWidth ?? 'inital'}`;
+    };
+
+    if (name == 'type') {
+      setAlertType(newValue);
+    }
+
+    if (name == 'padding') {
+      setPadding(newValue);
+    }
+
+    if (name == 'max-width') {
+      setMaxWidth(newValue);
+    }
   }
 }
 

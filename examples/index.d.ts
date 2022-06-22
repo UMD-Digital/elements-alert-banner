@@ -4,8 +4,10 @@ declare global {
     }
 }
 declare class AlertBanner extends HTMLElement {
+    static get observedAttributes(): string[];
     constructor();
     connectedCallback(): void;
+    attributeChangedCallback<T extends string>(name: string, oldValue: T, newValue: T): void;
     displayAlertLogic(storageKey: string): void;
     handleButtonClick(): void;
     getAlertContent(): {
@@ -17,9 +19,10 @@ declare class AlertBanner extends HTMLElement {
     };
     getStorageKey(): string | undefined;
     checkKeyIsUnique(storageKey: string): boolean | undefined;
-    composeButton(): HTMLElement;
-    composeStyles(): HTMLElement;
     composeTemplate(): DocumentFragment;
+    setButtonLabel(buttonText: string): void;
+    setAlertPersistance(dismissable: string): void;
+    setStyles(name: string, newValue: string): void;
 }
 export default AlertBanner;
 //# sourceMappingURL=index.d.ts.map
