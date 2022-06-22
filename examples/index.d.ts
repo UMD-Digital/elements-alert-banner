@@ -6,6 +6,7 @@ declare global {
 declare class AlertBanner extends HTMLElement {
     constructor();
     connectedCallback(): void;
+    displayAlertLogic(storageKey: string): void;
     handleButtonClick(): void;
     getAlertContent(): {
         storageKey: string | null;

@@ -154,26 +154,37 @@ class AlertBanner extends HTMLElement {
     constructor() {
         super();
         const storageKey = this.getStorageKey();
-        if (storageKey) {
-            const alertContent = this.getAlertContent();
-            const stringifyContent = JSON.stringify(alertContent);
-            const storedContent = window.localStorage.getItem(storageKey);
-            if (storedContent && stringifyContent === storedContent) {
-                this.setAttribute('show', 'false');
-                this.remove();
-            }
-            if (!storedContent || stringifyContent !== storedContent) {
-                const shadowRoot = this.attachShadow({ mode: 'open' });
-                const template = this.composeTemplate();
-                shadowRoot.append(template.cloneNode(true));
-                this.setAttribute('show', 'true');
-            }
-        }
+        storageKey && this.displayAlertLogic(storageKey);
     }
     connectedCallback() {
         const button = this.shadowRoot?.querySelector('button[name="close"]');
         const hideAlert = this.handleButtonClick.bind(this);
         button && button.addEventListener('click', hideAlert);
+    }
+    displayAlertLogic(storageKey) {
+        const alertContent = this.getAlertContent();
+        const stringifyContent = JSON.stringify(alertContent);
+        const storedContent = window.localStorage.getItem(storageKey);
+        const isSameContent = stringifyContent === storedContent;
+        const showAlert = () => {
+            const shadowRoot = this.attachShadow({ mode: 'open' });
+            const template = this.composeTemplate();
+            shadowRoot.append(template.cloneNode(true));
+            this.setAttribute('show', 'true');
+        };
+        const removeAlert = () => {
+            this.setAttribute('show', 'false');
+            this.remove();
+        };
+        if (!storedContent) {
+            showAlert();
+            return;
+        }
+        if (!isSameContent) {
+            showAlert();
+            return;
+        }
+        removeAlert();
     }
     handleButtonClick() {
         const isVisible = this.getAttribute('show') === 'true';

@@ -179,24 +179,7 @@ class AlertBanner extends HTMLElement {
 
     const storageKey = this.getStorageKey() as string;
 
-    if (storageKey) {
-      const alertContent = this.getAlertContent() as ElementContent;
-      const stringifyContent = JSON.stringify(alertContent) as string;
-      const storedContent = window.localStorage.getItem(storageKey);
-
-      if (storedContent && stringifyContent === storedContent) {
-        this.setAttribute('show', 'false');
-        this.remove();
-      }
-
-      if (!storedContent || stringifyContent !== storedContent) {
-        const shadowRoot = this.attachShadow({ mode: 'open' });
-        const template = this.composeTemplate();
-
-        shadowRoot.append(template.cloneNode(true));
-        this.setAttribute('show', 'true');
-      }
-    }
+    storageKey && this.displayAlertLogic(storageKey);
   }
 
   connectedCallback() {
@@ -204,6 +187,40 @@ class AlertBanner extends HTMLElement {
     const hideAlert = this.handleButtonClick.bind(this);
 
     button && button.addEventListener('click', hideAlert);
+  }
+
+  displayAlertLogic(storageKey: string) {
+    const alertContent = this.getAlertContent() as ElementContent;
+    const stringifyContent = JSON.stringify(alertContent) as string;
+    const storedContent = window.localStorage.getItem(storageKey) as string;
+    const isSameContent = stringifyContent === storedContent;
+
+    const showAlert = () => {
+      const shadowRoot = this.attachShadow({ mode: 'open' });
+      const template = this.composeTemplate();
+
+      shadowRoot.append(template.cloneNode(true));
+      this.setAttribute('show', 'true');
+    };
+
+    const removeAlert = () => {
+      this.setAttribute('show', 'false');
+      this.remove();
+    };
+
+    if (!storedContent) {
+      showAlert();
+
+      return;
+    }
+
+    if (!isSameContent) {
+      showAlert();
+
+      return;
+    }
+
+    removeAlert();
   }
 
   handleButtonClick() {
